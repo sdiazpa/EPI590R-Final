@@ -17,3 +17,22 @@ library(here)
 #Load dataset
 world_fairs <- read.csv(here("./data/worlds_fairs.csv"))
 ```
+
+**Creating table with descriptive statistics**
+```{r}
+head(worlds_fairs)
+tbl_summary(
+world_fairs,
+	by="category",
+	include = c(country, visitors, cost),
+	label = list(
+		country ~ "Country",
+		visitors ~ "Visitors",
+		cost ~ "Cost"),
+	statistic = list(
+		visitors ~ c("{p25},{p75}({median})"),
+		cost ~ c("{p25},{p75}({median})"))) |>
+	bold_labels()
+
+```
+
