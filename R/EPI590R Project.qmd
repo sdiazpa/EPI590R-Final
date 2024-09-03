@@ -30,7 +30,7 @@ There were `r stats$n` fairs included in the dataset, with a mean attendance of 
 ```{r}
 #| label: tbl-one
 #| tbl-cap: "Table of descriptive statistics"
-head(worlds_fairs)
+head(world_fairs)
 tbl_summary(
 world_fairs,
 	by="category",
@@ -51,12 +51,14 @@ world_fairs,
 ```{r}
 #| label: tbl-two
 #| tbl-cap: "Univariate regression table"
-tbl_uvregression(
+cost_table <- tbl_uvregression(
 	world_fairs,
 	y = cost,
 	include = c(country, category, visitors, cost),
 	method = lm
 	)
+
+inline_text(cost_table, variable="visitors")
 ```
 
 **Creating histogram of fair attendance**
@@ -64,10 +66,15 @@ tbl_uvregression(
 ```{r}
 #| label: fig-hist
 #| fig-cap: "Histogram of fair attendance"
-hist(world_fairs$visitors,
+visitors_hist <- hist(world_fairs$visitors,
 		 main="Attendance to Fairs, Globally",
 		 xlab="Visitors",
 		 col="orange",
 		)
-png(file=here::here("Attendance_Fairs.png"))
+
+pdf(here::here("Figures","visitors_hist.pdf"))
+dev.off()
 ```
+
+
+
