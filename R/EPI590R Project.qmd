@@ -1,13 +1,14 @@
 ---
 title: "EPI 590R Final Project"
 author: "Shamika Chavda"
+date: '2024-09-04'
 format: html
 ---
 
-**Dataset:** *worlds_fairs* -- Data about fairs/expositions held globally with data
-on cost, attendance, location, type, etc. 
+**Dataset:** *worlds_fairs* -- Data about fairs/expositions held globally with data on cost, attendance, location, type, etc. Found here: https://github.com/rfordatascience/tidytuesday/blob/master/data/2024/2024-08-13/readme.md
 
 **Loading packages & dataset**
+
 ```{r}
 ##Load packages
 library(tidyverse)
@@ -16,10 +17,19 @@ library(here)
 
 #Load dataset
 world_fairs <- read.csv(here("./data/worlds_fairs.csv"))
+
+#Code for inline statistic
+stats <- list(n = nrow(world_fairs),
+							mean_attendance = mean(world_fairs$visitors))
 ```
 
+There were `r stats$n` fairs included in the dataset, with a mean attendance of `r stats$mean_attendance`.
+
 **Creating table with descriptive statistics**
+
 ```{r}
+#| label: tbl-one
+#| tbl-cap: "Table of descriptive statistics"
 head(worlds_fairs)
 tbl_summary(
 world_fairs,
@@ -36,3 +46,28 @@ world_fairs,
 
 ```
 
+**Creating univariate regression table**
+
+```{r}
+#| label: tbl-two
+#| tbl-cap: "Univariate regression table"
+tbl_uvregression(
+	world_fairs,
+	y = cost,
+	include = c(country, category, visitors, cost),
+	method = lm
+	)
+```
+
+**Creating histogram of fair attendance**
+
+```{r}
+#| label: fig-hist
+#| fig-cap: "Histogram of fair attendance"
+hist(world_fairs$visitors,
+		 main="Attendance to Fairs, Globally",
+		 xlab="Visitors",
+		 col="orange",
+		)
+png(file=here::here("Attendance_Fairs.png"))
+```
