@@ -3,7 +3,8 @@ Shamika Chavda
 
 Intro: 
 Data is called "worlds_fairs.csv", and is read into R as "world_fairs". It can
-be accessed at the link shown in the Quarto file.
+be accessed at the link shown in the Quarto file. The dataset contains 
+information about fairs and expositions that have occurred globally. 
 
 Instructions:
 Read/render the world_fairs R script, then render the Quarto file in order to 
