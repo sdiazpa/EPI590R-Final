@@ -76,5 +76,16 @@ pdf(here::here("Figures","visitors_hist.pdf"))
 dev.off()
 ```
 
+**Create function** 
+```{r}
+sd_function <- function(x, multiplier =1) {
+	n <- length(x)
+	mean_val <-sum(x, na.rm=TRUE)/n
+	sd_val <- sqrt(sum(!is.na(x-mean_val)^2) / (n-1))
+	return(sd_val)
+}
+sd_function(world_fairs$cost)
+
+```
 
 
