@@ -5,32 +5,37 @@ date: '2024-09-04'
 format: html
 ---
 
-**Dataset:** *worlds_fairs* -- Data about fairs/expositions held globally with data on cost, attendance, location, type, etc. Found here: https://github.com/rfordatascience/tidytuesday/blob/master/data/2024/2024-08-13/readme.md
-
 **Loading packages & dataset**
 
 ```{r}
+#| echo: false
+#| message: false
 ##Load packages
 library(tidyverse)
 library(gtsummary)
 library(here)
+```
 
+```{r}
 #Load dataset
 world_fairs <- read.csv(here("./data/worlds_fairs.csv"))
 
 #Code for inline statistic
 stats <- list(n = nrow(world_fairs),
-							mean_attendance = mean(world_fairs$visitors))
+							mean_attendance = mean(world_fairs$visitors, na.RM = TRUE))
 ```
 
-There were `r stats$n` fairs included in the dataset, with a mean attendance of `r stats$mean_attendance`.
+**Dataset:** *worlds_fairs* -- Data about fairs/expositions held globally with 
+data on cost, attendance, location, type, etc. 
+Found here: https://github.com/rfordatascience/tidytuesday/blob/master/data/2024/2024-08-13/readme.md
+
+There were `r stats$n` fairs included in the dataset.
 
 **Creating table with descriptive statistics**
 
 ```{r}
 #| label: tbl-one
 #| tbl-cap: "Table of descriptive statistics"
-head(world_fairs)
 tbl_summary(
 world_fairs,
 	by="category",
@@ -51,11 +56,30 @@ world_fairs,
 ```{r}
 #| label: tbl-two
 #| tbl-cap: "Univariate regression table"
-cost_table <- tbl_uvregression(
+
+tbl_uvregression(
 	world_fairs,
 	y = cost,
 	include = c(country, category, visitors, cost),
-	method = lm
+	method = lm,
+	label = list(
+		country ~ "Country",
+		category ~ "Category",
+		visitors ~ "Visitors"
+	)
+	)
+#Create object for inline text
+cost_table <- 
+	tbl_uvregression(
+	world_fairs,
+	y = cost,
+	include = c(country, category, visitors, cost),
+	method = lm,
+	label = list(
+		country ~ "Country",
+		category ~ "Category",
+		visitors ~ "Visitors"
+	)
 	)
 
 inline_text(cost_table, variable="visitors")
@@ -66,6 +90,7 @@ inline_text(cost_table, variable="visitors")
 ```{r}
 #| label: fig-hist
 #| fig-cap: "Histogram of fair attendance"
+#| message: false
 visitors_hist <- hist(world_fairs$visitors,
 		 main="Attendance to Fairs, Globally",
 		 xlab="Visitors",
@@ -75,8 +100,11 @@ visitors_hist <- hist(world_fairs$visitors,
 pdf(here::here("Figures","visitors_hist.pdf"))
 dev.off()
 ```
+@fig-hist contains a histogram, @tbl-one shows descriptive statistics,
+and @tbl-two shows the regression table. 
 
-**Create function** 
+**Create function for standard deviation**
+
 ```{r}
 sd_function <- function(x, multiplier =1) {
 	n <- length(x)
@@ -87,5 +115,3 @@ sd_function <- function(x, multiplier =1) {
 sd_function(world_fairs$cost)
 
 ```
-
-
